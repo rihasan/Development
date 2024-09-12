@@ -24,7 +24,7 @@ class CommentSeeder extends Seeder
         $this->truncate('comments');
 
         // Seed the database table
-        $comments = Comment::factory(3)->create();
+        Comment::factory(3)->create();
 
         // Enable FOREIGN_KEY_CHECKS
         $this->enableforeignkey();

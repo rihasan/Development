@@ -26,7 +26,7 @@ class UserSeeder extends Seeder
         $this->truncate('users');
 
         // Seed the database table
-        $users = User::factory(5)->create();
+        User::factory(5)->create();
 
         // Enable FOREIGN_KEY_CHECKS
         $this->enableforeignkey();
