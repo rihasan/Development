@@ -12,4 +12,15 @@ class Comment extends Model
     protected $casts = [
         'body' => 'array',
     ];
+
+
+    public function post()
+    {
+        return $this->belongsToMany(Post::class, 'post_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsToMany(User::class, 'user_id');
+    }
 }
