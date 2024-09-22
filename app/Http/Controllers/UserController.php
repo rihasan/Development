@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-// use App\Http\Requests\StoreCommentRequest;
-// use App\Http\Requests\UpdateCommentRequest;
+// use App\Http\Requests\StorePostRequest;
+// use App\Http\Requests\UpdatePostRequest;
 
-use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 
-class CommentController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,7 +18,7 @@ class CommentController extends Controller
     public function index()
     {
         return new JsonResponse([
-            'data' => 'Comment index Page'
+            'data' => 'API Route is Working.'
         ]);
     }
 
@@ -28,37 +28,38 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         return new JsonResponse([
-            'data' => 'Comment stored.'
+            'data' => 'Data Stored.'
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(User $user)
     {
         return new JsonResponse([
-            'data' => $comment
+            'data' => $user
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, User $user)
     {
+        dump($request);
         return new JsonResponse([
-            'data' => 'Comment updated.'
+            'data' => 'Data Updated.'
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(User $user)
     {
         return new JsonResponse([
-            'data' => 'Comment deleted.'
+            'data' => 'Data Deleted.'
         ]);
     }
 }

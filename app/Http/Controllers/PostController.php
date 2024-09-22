@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
-use App\Http\Requests\UpdatePostRequest;
+// use App\Http\Requests\StorePostRequest;
+// use App\Http\Requests\UpdatePostRequest;
+
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -13,15 +16,19 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        return new JsonResponse([
+            'data' => 'Post index Page'
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
-        //
+        return new JsonResponse([
+            'data' => 'Post stored.'
+        ]);
     }
 
     /**
@@ -29,15 +36,19 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return new JsonResponse([
+            'data' => $post
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(Request $request, Post $post)
     {
-        //
+        return new JsonResponse([
+            'data' => 'Post updated.'
+        ]);
     }
 
     /**
@@ -45,6 +56,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        return new JsonResponse([
+            'data' => 'Post deleted.'
+        ]);
     }
 }
