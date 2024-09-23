@@ -9,11 +9,16 @@ use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\PostResource;
+// use Illuminate\Http\Resources\Json\ResourceCollection;
+
+
 
 class PostController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @return ResourceCollection
      */
     public function index()
     {
@@ -25,13 +30,13 @@ class PostController extends Controller
         // dump($posts);
         // dd($posts);
 
-        return new JsonResponse([
-            'data' => $posts
-        ]);
+        return PostResource::collection($posts);
+
     }
 
     /**
      * Store a newly created resource in storage.
+     * @return PostResource
      */
     public function store(Request $request)
     {
@@ -60,24 +65,21 @@ class PostController extends Controller
 
         });
 
-        return new JsonResponse([
-            'data' => $created
-        ]);
+        return new PostResource($created);
     }
 
     /**
      * Display the specified resource.
+     * @return PostResource
      */
     public function show(Post $post)
     {
-
-        return new JsonResponse([
-            'data' => $post
-        ]);
+        return new PostResource($post);
     }
 
     /**
      * Update the specified resource in storage.
+     * @return PostResource | JsonResponse
      */
     public function update(Request $request, Post $post)
     {
@@ -92,15 +94,11 @@ class PostController extends Controller
         if (!$updated) {
 
             return new JsonResponse([
-                'errors' => [
-                    'Failed to update model.'
-                ]
+                'errors' => 'Failed to update model.'                
             ], 400);
         }
 
-        return new JsonResponse([
-            'data' => $post,
-        ]);
+        return new PostResource($post);
     }
 
     /**

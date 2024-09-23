@@ -8,31 +8,32 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Resources\CommentResource;
+// use Illuminate\Http\Resources\Json\ResourceCollection;
+
 
 
 class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @return ResourceCollection
      */
     public function index()
     {
 
         $comments = Comment::query()->get();
 
-        return new JsonResponse([
-            'data' => $comments
-        ]);
+        return CommentResource::collection($comments);
     }
 
     /**
      * Store a newly created resource in storage.
+     * @return CommentResurce
      */
     public function store(Request $request)
     {
 
-        // have problem with user_id & post_id 
-        
         // Create the comment
         $created = Comment::create([
             'body' => $request->body,
@@ -40,25 +41,23 @@ class CommentController extends Controller
             'post_id' => $request->post_id,
         ]);
 
-        return new JsonResponse([
-            'data' => $created
-        ], 201);
+        return new CommentResource($created);
     }
 
 
 
     /**
      * Display the specified resource.
+     * @return CommentResurce
      */
     public function show(Comment $comment)
     {
-        return new JsonResponse([
-            'data' => $comment
-        ]);
+        return new CommentResource($comment);
     }
 
     /**
      * Update the specified resource in storage.
+     * @return CommentResurce | JsonResponse
      */
     public function update(Request $request, Comment $comment)
     {
@@ -73,19 +72,16 @@ class CommentController extends Controller
 
         if (!$updated) {
             return new JsonResponse([
-                'errors' => [
-                    'Failed to update resource.'
-                ]
+                'errors' => 'Failed to update resource.'
             ], 400);
         }
 
-        return new JsonResponse([
-            'data' => 'Comment updated.'
-        ]);
+        return new CommentResource($comment);
     }
 
     /**
      * Remove the specified resource from storage.
+     * @return JsonResponse
      */
     public function destroy(Comment $comment)
     {

@@ -8,24 +8,27 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
+// use Illuminate\Http\Resources\Json\ResourceCollection;
+
 
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * @return ResourceCollection
      */
     public function index()
     {
         $users  = User::query()->get();
 
-        return new JsonResponse([
-            'data' => $users
-        ]);
+        return UserResource::collection($users);
     }
 
     /**
      * Store a newly created resource in storage.
+     * @return UserResource
      */
     public function store(Request $request)
     {
@@ -35,23 +38,21 @@ class UserController extends Controller
             'password' => $request->password,
         ]);
 
-        return new JsonResponse([
-            'data' => $created
-        ]);
+        return new UserResource($created);
     }
 
     /**
      * Display the specified resource.
+     * @return UserResource
      */
     public function show(User $user)
     {
-        return new JsonResponse([
-            'data' => $user
-        ]);
+        return new UserResource($user);
     }
 
     /**
      * Update the specified resource in storage.
+     * @return UserResource | JsonResponse
      */
     public function update(Request $request, User $user)
     {
@@ -65,19 +66,16 @@ class UserController extends Controller
         if (!$updated) {
 
             return new JsonResponse([
-                'errors' => [
-                    'Failed to updated Models'
-                ]
+                'errors' => 'Failed to updated Models'
             ], 400);
         }
 
-        return new JsonResponse([
-            'data' => $user
-        ]);
+        return new UserResource($user);
     }
 
     /**
      * Remove the specified resource from storage.
+     * @return JsonResponse
      */
     public function destroy(User $user)
     {
