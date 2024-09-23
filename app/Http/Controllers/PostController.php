@@ -16,8 +16,16 @@ class PostController extends Controller
      */
     public function index()
     {
+
+        $posts = Post::query()->get();
+
+        // echo "<pre>";
+        // print_r($posts);
+        // dump($posts);
+        // dd($posts);
+
         return new JsonResponse([
-            'data' => 'Post index Page'
+            'data' => $posts
         ]);
     }
 
@@ -26,8 +34,13 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $created = Post::query()->create([
+            'title' => $request->title,
+            'body' => $request->body,
+        ]);
+
         return new JsonResponse([
-            'data' => 'Post stored.'
+            'data' => $created
         ]);
     }
 
@@ -36,6 +49,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+
         return new JsonResponse([
             'data' => $post
         ]);
@@ -46,8 +60,25 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
+        // $post->update($request->only(['title', 'body']));
+
+        $updated = $post->update([
+            'title' => $request->title ?? $post->title,
+            'body' => $request->body ?? $post->body,
+        ]);
+
+        if (!$updated) {
+
+            return new JsonResponse([
+                'errors' => [
+                    'Failed to update model.'
+                ]
+            ], 400);
+        }
+
         return new JsonResponse([
-            'data' => 'Post updated.'
+            'data' => $post,
         ]);
     }
 
@@ -56,6 +87,16 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        $deleted = $post->forceDelete();
+        
+        if (!$deleted) {
+            return new JsonResponse([
+                'errors' => [
+                    'Could not delete the resource.'
+                ]
+            ], 400);
+        }
+
         return new JsonResponse([
             'data' => 'Post deleted.'
         ]);

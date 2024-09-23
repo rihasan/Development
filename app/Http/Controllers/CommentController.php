@@ -17,8 +17,11 @@ class CommentController extends Controller
      */
     public function index()
     {
+
+        $comments = Comment::query()->get();
+
         return new JsonResponse([
-            'data' => 'Comment index Page'
+            'data' => $comments
         ]);
     }
 
@@ -27,10 +30,22 @@ class CommentController extends Controller
      */
     public function store(Request $request)
     {
-        return new JsonResponse([
-            'data' => 'Comment stored.'
+
+        // have problem with user_id & post_id 
+        
+        // Create the comment
+        $created = Comment::create([
+            'body' => $request->body,
+            'user_id' => $request->user_id,
+            'post_id' => $request->post_id,
         ]);
+
+        return new JsonResponse([
+            'data' => $created
+        ], 201);
     }
+
+
 
     /**
      * Display the specified resource.
@@ -47,6 +62,23 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment)
     {
+        // Validate the request
+        $validated = $request->validate([
+            'body' => 'required|string|max:500',
+        ]);
+
+        $updated = $comment->update([
+            'body' => $request->body 
+        ]);
+
+        if (!$updated) {
+            return new JsonResponse([
+                'errors' => [
+                    'Failed to update resource.'
+                ]
+            ], 400);
+        }
+
         return new JsonResponse([
             'data' => 'Comment updated.'
         ]);
@@ -57,6 +89,16 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment)
     {
+        $deleted = $comment->forceDelete();
+
+        if (!$deleted) {
+            return new JsonResponse([
+                'errors' => [
+                    'Failed to delete resource.'
+                ]
+            ], 400);
+        }
+
         return new JsonResponse([
             'data' => 'Comment deleted.'
         ]);
