@@ -19,9 +19,10 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @return ResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users  = User::query()->get();
+        $pageSize = $request->pageSize ?? 20;
+        $users  = User::query()->paginate($pageSize);
 
         return UserResource::collection($users);
     }

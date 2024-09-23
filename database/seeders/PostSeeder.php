@@ -27,7 +27,7 @@ class PostSeeder extends Seeder
         $this->truncate('posts');
 
         // Seed the database table
-        $posts = Post::factory(5)
+        $posts = Post::factory(150)
                 // ->has(Comment::factory(3), 'comments')
                 // ->untitled()
                 ->create();
