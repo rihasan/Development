@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PostResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Repositories\PostRepository;
+// use App\Exceptions\GeneralJsonException;
 
 
 
@@ -24,6 +25,9 @@ class PostController extends Controller
     public function index(Request $request)
     {
 
+        // throw new GeneralJsonException ("An error occurred", 422);
+        // abort(404);
+        
         $pageSize = $request->pageSize ?? 20;
         $posts = Post::query()->paginate($pageSize);
 

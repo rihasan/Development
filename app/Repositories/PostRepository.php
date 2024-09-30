@@ -5,7 +5,7 @@ namespace App\Repositories;
 
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
-
+use App\Exceptions\GeneralJsonException;
 
 /**
  * PostRepository for manage Post Model
@@ -21,6 +21,12 @@ class PostRepository extends BaseRepository
 	            'title' => data_get($attributes, 'title', 'Untitled'),
 	            'body' => data_get($attributes, 'body'),
 	        ]);
+			
+			// if (!$updated) {
+	        // 	throw new \Exception("Failed to update model.");
+	        // }
+	         
+	        throw_if(!$created, GeneralJsonException::class, 'Can not create post.');
 
 	        if ($userIds = data_get($attributes, 'user_ids')) {
 	        	$created->users()->sync($userIds);
@@ -46,9 +52,11 @@ class PostRepository extends BaseRepository
 	            'body' => data_get($attributes, 'body', $post->body),
 	        ]);
 
-	        if (!$updated) {
-	        	throw new \Exception("Failed to update model.");
-	        }
+	        // if (!$updated) {
+	        // 	throw new \Exception("Failed to update model.");
+	        // }
+
+	        throw_if(!$updated, GeneralJsonException::class, 'Failed to update post.');
 
 	        if ($userIds = data_get($attributes, 'user_ids')) {
 	        	$post->users()->sync($userIds);
@@ -68,9 +76,13 @@ class PostRepository extends BaseRepository
 	{
 		return DB::transaction(function () use($post) {
 		    $deleted = $post->forceDelete();
-		    if (!$deleted) {
-		    	throw new \Exception("Can not delete post.");
-		    }
+
+		    // if (!$deleted) {
+		    // 	throw new \Exception("Can not delete post.");
+		    // }
+
+		    throw_if(!$deleted, GeneralJsonException::class, 'Can not delete post.');
+
 		    return $deleted;
 		});
 	}
