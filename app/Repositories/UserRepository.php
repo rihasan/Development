@@ -5,6 +5,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use App\Exceptions\GeneralJsonException;
 
 
 /**
@@ -22,6 +23,8 @@ class UserRepository extends BaseRepository
 	            'email' => data_get($attributes, 'email'),
 	            'password' => data_get($attributes, 'password'),
        		 ]);
+
+	       throw_if(!$created, GeneralJsonException::class, 'Can not create user.');
 
 	       return $created;
 		});
@@ -44,10 +47,12 @@ class UserRepository extends BaseRepository
 	            'password' => data_get($attributes, 'password', $user->password),
        		 ]);
 
-		  if (!$updated) {
-		  	throw new \Exception("Can not update user.");
+		  // if (!$updated) {
+		  // 	throw new \Exception("Can not update user.");
 		  	
-		  }
+		  // }
+
+		  throw_if(!$updated, GeneralJsonException::class, 'Can not update user.');
 		  
 		  return $user;
 
@@ -64,9 +69,14 @@ class UserRepository extends BaseRepository
 		return DB::transaction(function () use ($user) {
 
 		    $deleted = $user->forceDelete();
-		    if (!$deleted) {
-		    	throw new \Exception("Can not delete user.");
-		    }
+		    
+		    // if (!$deleted) {
+		    // 	throw new \Exception("Can not delete user.");
+		    // }
+		    
+		    throw_if(!$deleted, GeneralJsonException::class, 'Can not delete user');
+
+		    // 
 		    return $deleted;
 		});
 	}

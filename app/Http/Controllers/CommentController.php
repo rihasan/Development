@@ -35,7 +35,7 @@ class CommentController extends Controller
     public function store(Request $request, CommentRepository $repository)
     {
         // Create the comment
-        $created = Comment::create($request->only([
+        $created = $repository->create($request->only([
             'body',
             'user_id',
             'post_id',
