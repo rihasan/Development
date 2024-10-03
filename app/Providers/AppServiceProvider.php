@@ -4,6 +4,14 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
+use Illuminate\Support\Facades\Event;
+
+// use App\Events\Models\User\UserCreated;
+// use App\Listeners\EventListener;
+
+use App\Subscribers\EventSubscriber;
+
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Event::listen(UserCreated::class, EventListener::class);
+       
+        // Register the UserEventListener subscriber 
+        Event::subscribe(EventSubscriber::class);
+
     }
 }

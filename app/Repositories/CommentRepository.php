@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\DB;
 use App\Exceptions\GeneralJsonException;
 
 
+// Comment Models Event
+use App\Events\Models\Comment\CommentCreated;
+use App\Events\Models\Comment\CommentUpdated;
+use App\Events\Models\Comment\CommentDeleted;
+
+
 /**
  * CommentRepository manage Comment Model
  */
@@ -24,9 +30,11 @@ class CommentRepository extends BaseRepository
 	            'post_id' => data_get($attributes, 'post_id'),
 	        ]);
 
-	        throw_if(!$create, GeneralJsonException::class, 'Can not create comment.');
+	        throw_if(!$created, GeneralJsonException::class, 'Can not create comment.');
 
-	        return$created;
+	        event(new CommentCreated($created));
+
+	        return $created;
 		});		
 	}	
 
@@ -52,6 +60,8 @@ class CommentRepository extends BaseRepository
 
 		    throw_if(!$updated, GeneralJsonException::class, 'Can not update comment.');
 
+		    event(new CommentUpdated($comment));
+
 		    return $comment;
 		    
 		});
@@ -73,6 +83,8 @@ class CommentRepository extends BaseRepository
 		    // }
 		    
 		    throw_if(!$deleted, GeneralJsonException::class, 'Can not delete comment.');
+
+		    event(new CommentDeleted($comment));
 
 	        return $deleted;
 		});
