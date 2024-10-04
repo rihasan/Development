@@ -5,6 +5,9 @@ namespace App\Listeners;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
+
 use App\Subscribers\EventSubscriber;
 
 // User Models Event
@@ -42,7 +45,8 @@ class EventListener
 
         // User Models Event
         if ($event instanceof UserCreated) {
-            dump('UserCreated mail triggered.');
+            Mail::to($event->user)->send(new WelcomeMail($event->user));
+            // dump('UserCreated mail triggered.');
         }elseif ($event instanceof UserUpdated) {
             dump('UserUpdated mail triggered.');
         }elseif($event instanceof UserDeleted){
