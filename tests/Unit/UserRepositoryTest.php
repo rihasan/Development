@@ -8,10 +8,12 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Exceptions\GeneralJsonException;
 use Illuminate\Support\Str;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
 class UserRepositoryTest extends TestCase
 {
+  use RefreshDatabase;
   
   public function test_create()
   {

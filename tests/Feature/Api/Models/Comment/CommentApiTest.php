@@ -18,7 +18,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CommentApiTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase;        
+
     protected $uri = 'api/comments';
 
 

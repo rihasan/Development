@@ -7,9 +7,12 @@ use Tests\TestCase;
 use App\Models\Post;
 use App\Repositories\PostRepository;
 use App\Exceptions\GeneralJsonException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class PostRepositoryTest extends TestCase
 {
+    use RefreshDatabase;
+    
     public function test_create() {
         // 1. Define the Goals
         // test if create() actually creates a record in the DB

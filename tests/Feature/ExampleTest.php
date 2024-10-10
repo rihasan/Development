@@ -15,5 +15,9 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
+
+        $this->assertSame('abcd', 'abcd');
+
+        $this->assertSame('123', '123');
     }
 }

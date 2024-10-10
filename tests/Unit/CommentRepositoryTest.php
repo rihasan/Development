@@ -9,11 +9,13 @@ use App\Models\Post;
 use App\Models\User;
 use App\Repositories\CommentRepository;
 use App\Exceptions\GeneralJsonException;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 
 
 class CommentRepositoryTest extends TestCase
 {
+    use RefreshDatabase;
 
     public function test_create(): void
     {
