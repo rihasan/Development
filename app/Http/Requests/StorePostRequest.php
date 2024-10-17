@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\IntegerArray;
 
 class StorePostRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StorePostRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,30 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string|max:256',
+            'body' => ['required', 'string'],
+            'user_ids' => [
+            'array',
+            'required',
+
+            new IntegerArray(),
+
+            // function ($attributes, $value, $fail){
+            //     $integerOnly = collect($value)->every(fn ($element) => is_int($element));
+            //     if (!$integerOnly) {
+            //         $fail($attributes. ' can only be integer.');
+            //         }
+            //     }
+            
+            ],
+
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'body.required' => 'Please insert a valid body for the post.',
         ];
     }
 }
