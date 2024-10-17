@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StorePostRequest;
+// use App\Http\Requests\StorePostRequest;
 // use App\Http\Requests\UpdatePostRequest;
 
 use App\Models\Post;
@@ -13,6 +13,8 @@ use App\Http\Resources\PostResource;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use App\Repositories\PostRepository;
 // use App\Exceptions\GeneralJsonException;
+use Illuminate\Support\Facades\Validator;
+use App\Rules\IntegerArray;
 
 
 
@@ -45,13 +47,62 @@ class PostController extends Controller
      * @param StorePostRequest $request
      * @return PostResource
      */
-    public function store(StorePostRequest $request, PostRepository $repository)
+    public function store(Request $request, PostRepository $repository)
     {
-        $created = $repository->create($request->only([
+        $payload = $request->only([
             'title',
             'body',
             'user_ids',
-        ]));
+        ]);
+
+        $validator = Validator::make($payload,[
+            'title' => 'required|string|max:256',
+            'body' => ['required', 'string'],
+            'user_ids' => [
+                'array',
+                'required',
+
+                new IntegerArray(),
+
+                // function ($attributes, $value, $fail){
+                //     $integerOnly = collect($value)->every(fn ($element) => is_int($element));
+                //     if (!$integerOnly) {
+                //         $fail($attributes. ' can only be integer.');
+                //         }
+                //     }
+                
+                ]
+            ],
+
+            [
+                'body.required' => 'Please insert a valid body for the post.',
+            ],
+
+            [
+                'user_ids' => 'User ID'
+            ]);
+
+
+        // $errors = $validator->errors();
+        // $errors = $validator->messages();
+
+        // dump($validator->fails());
+        // dump($validator->passes());
+        // dump($validator->getData());
+        // dump($validator->attributes());
+
+        // dd($validator->failed());
+
+
+        // $validator->after(function($validator){
+        //     dump('this will dump');
+        // });
+
+        // dd($validator->validateString('test', 123));
+
+        // $validator->validate();
+
+        $created = $repository->create($payload);
 
         return new PostResource($created);
     }
