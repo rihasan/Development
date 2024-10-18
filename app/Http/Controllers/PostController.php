@@ -17,13 +17,28 @@ use Illuminate\Support\Facades\Validator;
 use App\Rules\IntegerArray;
 
 
+/**
+ * @group Post Management
+ *
+ *APIs to manage the post resource
+ * 
+**/
 
 class PostController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of posts.
+     *
+     * Gets a list of posts.
+     *
+     * @queryParam page_size int Size per page. Defaults to 20. Example: 20
+     * @queryParam page int Page to view. Example: 1
+     *
+     * @apiResourceCollection App\Http\Resources\PostResource
+     * @apiResourceModel App\Models\Post
      * @return ResourceCollection
      */
+
     public function index(Request $request)
     {
 
@@ -43,10 +58,17 @@ class PostController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     * @param StorePostRequest $request
+     * Store a newly created post in storage.
+     * @bodyParam title string required Title of the post. Example: Amazing Post
+     * @bodyParam body string[] required Body of the post. Example: ["This post is super beautiful"]
+     * @bodyParam user_ids int[] required The author ids of the post. Example: [1, 2]
+     * @apiResource App\Http\Resources\PostResource
+     * @apiResourceModel App\Models\Post
+     * @param  PostStoreRequest  $request
      * @return PostResource
      */
+    
+
     public function store(Request $request, PostRepository $repository)
     {
         $payload = $request->only([
@@ -108,18 +130,31 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified post.
+     * @apiResource App\Http\Resources\PostResource
+     * @apiResourceModel App\Models\Post
+     * @param  \App\Models\Post  $post
      * @return PostResource
      */
+    
     public function show(Post $post)
     {
         return new PostResource($post);
     }
+    
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified post in storage.
+     * @bodyParam title string required Title of the post. Example: Amazing Post
+     * @bodyParam body string[] required Body of the post. Example: ["This post is super beautiful"]
+     * @bodyParam user_ids int[] required The author ids of the post. Example: [1, 2]
+     * @apiResource App\Http\Resources\PostResource
+     * @apiResourceModel App\Models\Post
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Post  $post
      * @return PostResource | JsonResponse
      */
+    
     public function update(Request $request, Post $post, PostRepository $repository)
     {
         $post = $repository->update($post, $request->only([
@@ -131,9 +166,17 @@ class PostController extends Controller
         return new PostResource($post);
     }
 
+    
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified post from storage.
+     * @response 200 {
+        "data": "Post deleted."
+     * }
+     * @param  \App\Models\Post  $post
+     * @return \Illuminate\Http\JsonResponse
      */
+    
+    
     public function destroy(Post $post, PostRepository $repository)
     {
         $deleted = $repository->forceDelete($post);
